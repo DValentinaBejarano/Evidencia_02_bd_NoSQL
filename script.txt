@@ -1,0 +1,230 @@
+use biblioteca
+
+db.createCollection("libro")
+db.createCollection("lector")
+db.createCollection("prestamo")
+
+db.libro.insert([
+ {
+	"_id": 1,
+	"nombre": "Boulevard",
+	"editorial": "Naranja",
+	"tamaño": "Mediano",
+	"autor": "Flor Salvador",
+	"paginas": 360,
+	"idioma": "Español"
+ },
+ {
+	"_id": 2,
+	"nombre": "El psicoanalista",
+	"editorial": "B de Bolsillo",
+	"tamaño": "Grande",
+	"autor": "John Katzenbach",
+	"paginas": 523,
+	"idioma": "Español"
+ },
+ {
+	"_id": 3,
+	"nombre": "Los ojos del perro siberiano",
+	"editorial": "Norma",
+	"tamaño": "Mediano",
+	"autor": "Antonio Santa Ana",
+	"paginas": 136,
+	"idioma": "Español"
+ },
+ {
+	"_id": 4,
+	"nombre": "Apocalipsis",
+	"editorial": "Planeta",
+	"tamaño": "Mediano",
+	"autor": "Mario Mendoza",
+	"paginas": 1584,
+	"idioma": "Español"
+ },
+ {
+	"_id": 5,
+	"nombre": "La chica del tren",
+	"editorial": "Planeta Booket",
+	"tamaño": "Grande",
+	"autor": "Paula Hawkins",
+	"paginas": 493,
+	"idioma": "Español"
+ },
+{
+	"_id": 6,
+	"nombre": "Escrito en el agua",
+	"editorial": "Planeta",
+	"tamaño": "Grande",
+	"autor": "Paula Hawkins",
+	"paginas": 556,
+	"idioma": "Español"
+ }
+])
+
+db.lector.insert([
+ {
+	"_id": 1
+	"nombre": "Karen" 
+	"apellido": "Vargas" 
+	"edad": 16
+	"documento": "Tarjeta Identidad"
+	"numDoc": 1011201964
+ },
+{
+	"_id": 2
+	"nombre": "Lorena"
+	"apellido": "Rodriguez"
+	"edad": 17
+	"documento": "Tarjeta Identidad"
+	"numDoc": 1000856941
+ },
+{
+	"_id": 3
+	"nombre": "Juliana"
+	"apellido": "Montenegro"
+	"edad": 21
+	"documento": "Cedula"
+	"numDoc": 1000972846
+ },
+{
+	"_id": 4
+	"nombre": "Yuli"
+	"apellido": "Neira"
+	"edad": 32
+	"documento": "Cedula"
+	"numDoc": 1033589741
+ },
+{
+	"_id": 5
+	"nombre": "Loren" 
+	"apellido": "Cardenas"
+	"edad": 16
+	"documento": "Tarjeta Identidad"
+	"numDoc": 1024460582
+ },
+{
+	"_id": 6
+	"nombre": "Valery"
+	"apellido": "Cardenas"
+	"edad": 11
+	"documento": "Tarjeta Identidad"
+	"numDoc": 1023695847
+ }
+])
+
+db.prestamo.insert([
+ {
+	"_id": 1
+	"fechaPrestamo": new Date(2019,11,05) 
+	"fechaEntrega": new Date(2019,12,05) 
+	"estadoLibro": "Buen estado"
+	"devuelto": "True"
+ },
+{
+	"_id": 2
+	"fechaPrestamo": new Date(2021,02,17) 
+	"fechaEntrega": new Date(2021,03,17) 
+	"estadoLibro": "Portada rota"
+	"devuelto": "True"
+ },
+{
+	"_id": 3
+	"fechaPrestamo": new Date(2021,05,21) 
+	"fechaEntrega": new Date(2021,06,21) 
+	"estadoLibro": "No entrega"
+	"devuelto": "False"
+ },
+{
+	"_id": 4
+	"fechaPrestamo": new Date(2022,10,31) 
+	"fechaEntrega": new Date(2022,11,31) 
+	"estadoLibro": "Buen estado"
+	"devuelto": "True"
+ },
+{
+	"_id": 5
+	"fechaPrestamo": new Date(2015,09,12) 
+	"fechaEntrega": new Date(2015,10,12) 
+	"estadoLibro": "Buen estado"
+	"devuelto": "True"
+ },
+{
+	"_id": 6
+	"fechaPrestamo": new Date(2022,12,01) 
+	"fechaEntrega": new Date(2023,01,01) 
+	"estadoLibro": "Paginas rotas"
+	"devuelto": "True"
+ }
+])
+
+db.libro.find().pretty()
+db.lector.find().pretty()
+db.prestamo.find().pretty()
+
+db.libro.find({"autor":{"$in:["Paula Hawkins", "Mario Mendoza"]}})
+db.libro.find({"_id:2"})
+db.libro.findOne({editorial: "Planeta"})
+db.libro.find({"paginas":{$gt:500}})
+db.libro.find({"paginas":{$lte:400}})
+
+db.lector.find({"edad":{"$gt":17, "$lt":30}})
+db.lector.find({documento:{$ne:"Tarjeta Identidad"}}, {_id:0, documento:1})
+db.lector.find({apellido:/.*ca.*/i})
+db.lector.find({edad:{$nin:[17,21]}})
+db.lector.find({edad:{$gt:25}})
+
+db.prestamo.find({"_id":5})
+db.prestamo.find({"estadoLibro":{$eq:"Buen estado"}})
+db.prestamo.find({devuelto:{$ne:"False"}})
+db.prestamo.find({fechaPrestamo:{$gte: new Date("2022-12-01T05:00:00:000Z")}})
+db.prestamo.find({$and:[{estadoLibro:"Portada rota"}, {devuelto:"True"}]})
+
+db.libro.updateOne({nombre:"Boulevard"},{$rename:{"tamaño":"tamanio"}})
+db.libro.find({nombre:""Boulevard})
+db.libro.updateMany({},{$rename:{"tamaño":"tamanio"}})
+db.libro.find().pretty()
+db.libro.update({_id:4},{$set:{tamanio:"Grande"}})
+db.libro.find({_id:4})
+db.libro.update({_id:6},{$set:{editorial:"Planeta Booker"}})
+db.libro.find({_id:6})
+db.libro.update({_id:4}, {$min:{paginas:1200}})
+db.libro.find({_id:4})
+
+db.lector.updateOne({_id:2}, {$rename:{documento:"tipoDocumento"}})
+db.lector.updateOne({nombre: "Karen"}, {$inc:{edad:2}})
+db.lector.updateOne({_id:1}, {$set:{tipoDocumento:"Cedula"}})
+db.lector.updateOne({_id: 6}, {$set:{numDoc: 1013324569}})
+db.lector.updateOne({_id: 4}, {$max:{edad:35}})
+
+db.prestamo.updateOne({_id:1}, {$rename:{Mojado:"descripcionLibro}})
+db.prestamo.update({_id:3}, {$set:{fechaEntrega:("2025-08-01T05)}})
+db.prestamo.updateOne({_id:6}, {$set:{estadoLibro:"Lleno de agua"}})
+db.prestamo.updateOne({_id:4}, {$rename:{fechaEntrega:"plazoMaximo"}})
+db.prestamo.updateOne({estadoLibro:"Buen estado"}, {$set:{entrega:"False"}})
+
+db.prestamo.find({_id:6})
+db.lector.updateOne({_id: 3}, {$unset:{numDoc: "numDoc"}})
+db.lector.deleteOne({_id: 5})
+db.libro.updateOne({_id:2}, {$unset:{tamanio:"tamanio"}})
+db.prestamo.updateOne({_id:5}, {$unset:{fechaEntrega:"fechaEntrega"}})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
